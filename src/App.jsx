@@ -29,6 +29,21 @@ const Content = (props) => {
 	);
 };
 
+const Total = (props) => {
+	const parts = props.parts;
+	let sum = 0;
+
+	for (let i = 0; i < parts.length; i++) {
+		sum += parts[i].exercises;
+	}
+
+	return (
+		<div>
+			<strong>total of {sum} exercises</strong>
+		</div>
+	);
+};
+
 const Course = (props) => {
 	const course = props.course;
 
@@ -37,6 +52,8 @@ const Course = (props) => {
 			<Header text={course.name} />
 
 			<Content parts={course.parts} />
+
+			<Total parts={course.parts} />
 		</div>
 	);
 };
