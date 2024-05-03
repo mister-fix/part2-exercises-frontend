@@ -20,6 +20,8 @@ const App = () => {
 		 * * The code above can also be done as such
 		 * * setPersons(persons.concat(personObject))
 		 */
+
+		setNewName("");
 	};
 
 	return (
