@@ -11,15 +11,17 @@ const App = () => {
 	const addPerson = (event) => {
 		event.preventDefault();
 
+		const checkPerson = persons
+			.map((person) => person.name.toLowerCase())
+			.includes(newName.toLowerCase());
+
 		const personObject = {
 			name: newName,
 		};
 
-		setPersons([...persons, personObject]);
-		/*
-		 * * The code above can also be done as such
-		 * * setPersons(persons.concat(personObject))
-		 */
+		checkPerson
+			? alert(`${newName} is already added to phonebook`)
+			: setPersons([...persons, personObject]);
 	};
 
 	return (
