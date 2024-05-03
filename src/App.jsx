@@ -30,6 +30,9 @@ const App = () => {
 		checkPerson
 			? alert(`${newName} is already added to phonebook`)
 			: setPersons([...persons, personObject]);
+
+		setNewName("");
+		setNewNumber("");
 	};
 
 	return (
