@@ -11,7 +11,7 @@ const App = () => {
 	const [newNumber, setNewNumber] = useState("");
 
 	useEffect(() => {
-		personService.getAll().then((initialPersons) => {
+		personService.getAllPersons().then((initialPersons) => {
 			setPersons(initialPersons);
 		});
 	}, []);
@@ -42,7 +42,7 @@ const App = () => {
 
 		checkPerson
 			? alert(`${newName} is already added to phonebook`)
-			: personService.create(personObject).then((returnedPerson) => {
+			: personService.createPerson(personObject).then((returnedPerson) => {
 					setPersons([...persons, returnedPerson]);
 					setNewName("");
 					setNewNumber("");
@@ -50,6 +50,23 @@ const App = () => {
 
 		setNewName("");
 		setNewNumber("");
+	};
+
+	const deletePerson = (id) => {
+		const person = persons.find((person) => person.id === id);
+		const accept = window.confirm(`Delete ${person.name}?`);
+
+		if (accept) {
+			personService
+				.removePerson(id)
+				.then(() => {
+					setPersons(persons.filter((person) => person.id !== id));
+				})
+				.catch((error) => {
+					alert(`${person.name} was already deleted`);
+					console.log(error.response);
+				});
+		}
 	};
 
 	const filteredPhonebook =
@@ -80,7 +97,10 @@ const App = () => {
 
 			<h2>Numbers</h2>
 
-			<Persons phonebook={filteredPhonebook} />
+			<Persons
+				phonebook={filteredPhonebook}
+				deletePerson={deletePerson}
+			/>
 		</div>
 	);
 };
