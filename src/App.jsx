@@ -31,25 +31,41 @@ const App = () => {
 	const addPerson = (event) => {
 		event.preventDefault();
 
-		const checkPerson = persons
-			.map((person) => person.name.toLowerCase())
-			.includes(newName.toLowerCase());
-
 		const personObject = {
 			name: newName,
 			number: newNumber,
 		};
 
-		checkPerson
-			? alert(`${newName} is already added to phonebook`)
-			: personService.createPerson(personObject).then((returnedPerson) => {
-					setPersons([...persons, returnedPerson]);
-					setNewName("");
-					setNewNumber("");
-			  });
+		const checkPerson = persons
+			.map((person) => person.name.toLowerCase())
+			.includes(newName.toLowerCase());
 
-		setNewName("");
-		setNewNumber("");
+		if (checkPerson) {
+			const confirmChange = window.confirm(
+				`${newName} is already added to phonebook, replace the old number with a new one?`
+			);
+			const personToUpdate = persons.find(
+				(person) => person.name.toLowerCase() == newName.toLowerCase()
+			);
+
+			if (confirmChange) {
+				personService
+					.updatePerson(personToUpdate.id, personObject)
+					.then((returnedPerson) => {
+						setPersons(
+							persons.map((person) =>
+								person.id !== personToUpdate.id ? person : returnedPerson
+							)
+						);
+					});
+			}
+		} else {
+			personService.createPerson(personObject).then((returnedPerson) => {
+				setPersons([...persons, returnedPerson]);
+				setNewName("");
+				setNewNumber("");
+			});
+		}
 	};
 
 	const deletePerson = (id) => {
