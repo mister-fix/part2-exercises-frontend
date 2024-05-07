@@ -11,15 +11,10 @@ const App = () => {
 	const [newNumber, setNewNumber] = useState("");
 
 	useEffect(() => {
-		console.log("effect");
-
 		axios.get("http://localhost:3001/persons").then((response) => {
-			console.log("promise fulfilled");
 			setPersons(response.data);
 		});
 	}, []);
-
-	console.log("rendered", persons.length, "people");
 
 	const handleFilterChange = (event) => {
 		setFilterBy(event.target.value);
@@ -43,15 +38,17 @@ const App = () => {
 		const personObject = {
 			name: newName,
 			number: newNumber,
-			id: persons.length + 1,
 		};
 
 		checkPerson
 			? alert(`${newName} is already added to phonebook`)
-			: setPersons([...persons, personObject]);
-
-		setNewName("");
-		setNewNumber("");
+			: axios
+					.post("http://localhost:3001/persons", personObject)
+					.then((response) => {
+						setPersons([...persons, response.data]);
+						setNewName("");
+						setNewNumber("");
+					});
 	};
 
 	const filteredPhonebook =
