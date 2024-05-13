@@ -3,11 +3,13 @@ import SearchForm from "./components/SearchForm";
 import Countries from "./components/Countries";
 import Country from "./components/Country";
 import countryService from "./services/countries";
+import weatherService from "./services/weather";
 
 const App = () => {
 	const [value, setValue] = useState("");
 	const [countries, setCountries] = useState(null);
 	const [selectedCountry, setSelectedCountry] = useState(null);
+	const [weatherData, setWeatherData] = useState(null);
 
 	useEffect(() => {
 		if (value) {
@@ -15,7 +17,7 @@ const App = () => {
 				.getAll()
 				.then((returnedCountries) => setCountries(returnedCountries));
 		}
-	});
+	}, [value]);
 
 	const handleValue = (event) => {
 		const searchValue = event.target.value;
@@ -23,11 +25,19 @@ const App = () => {
 
 		if (!searchValue) {
 			setSelectedCountry(null);
+			setWeatherData(null);
 		}
 	};
 
 	const handleSelectedCountry = (country) => {
 		setSelectedCountry(country);
+
+		const lat = country.latlng[0];
+		const lon = country.latlng[1];
+
+		weatherService
+			.getWeather(lat, lon)
+			.then((returnedWeather) => setWeatherData(returnedWeather));
 	};
 
 	const showCountries = countries
@@ -44,7 +54,10 @@ const App = () => {
 			/>
 
 			{selectedCountry ? (
-				<Country country={selectedCountry} />
+				<Country
+					country={selectedCountry}
+					weatherData={weatherData}
+				/>
 			) : (
 				<Countries
 					value={value}
