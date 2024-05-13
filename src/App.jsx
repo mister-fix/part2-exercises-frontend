@@ -110,6 +110,14 @@ const App = () => {
 				})
 				.catch((error) => {
 					console.log(error);
+
+					setNotification({
+						type: "warning",
+						message: `Information on ${person.name} has already been removed from server`,
+					});
+					setTimeout(() => {
+						setNotification({ type: null, message: null });
+					}, 3000);
 				});
 		}
 	};
