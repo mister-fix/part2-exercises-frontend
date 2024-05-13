@@ -1,11 +1,13 @@
 import { useState, useEffect } from "react";
 import SearchForm from "./components/SearchForm";
 import Countries from "./components/Countries";
+import Country from "./components/Country";
 import countryService from "./services/countries";
 
 const App = () => {
 	const [value, setValue] = useState("");
 	const [countries, setCountries] = useState(null);
+	const [selectedCountry, setSelectedCountry] = useState(null);
 
 	useEffect(() => {
 		if (value) {
@@ -16,7 +18,16 @@ const App = () => {
 	});
 
 	const handleValue = (event) => {
-		setValue(event.target.value);
+		const searchValue = event.target.value;
+		setValue(searchValue);
+
+		if (!searchValue) {
+			setSelectedCountry(null);
+		}
+	};
+
+	const handleSelectedCountry = (country) => {
+		setSelectedCountry(country);
 	};
 
 	const showCountries = countries
@@ -32,10 +43,15 @@ const App = () => {
 				onChangeHandler={handleValue}
 			/>
 
-			<Countries
-				value={value}
-				countries={showCountries}
-			/>
+			{selectedCountry ? (
+				<Country country={selectedCountry} />
+			) : (
+				<Countries
+					value={value}
+					countries={showCountries}
+					onSelectCountry={handleSelectedCountry}
+				/>
+			)}
 		</div>
 	);
 };
