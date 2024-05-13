@@ -1,6 +1,6 @@
 import Country from "./Country";
 
-const Countries = ({ value, countries }) => {
+const Countries = ({ value, countries, onSelectCountry }) => {
 	if (value && countries) {
 		if (countries.length === 1) {
 			return (
@@ -19,7 +19,10 @@ const Countries = ({ value, countries }) => {
 			return (
 				<div>
 					{countries.map((country) => (
-						<div key={country.name.common}>{country.name.common}</div>
+						<div key={country.name.common}>
+							{country.name.common}{" "}
+							<button onClick={() => onSelectCountry(country)}>show</button>
+						</div>
 					))}
 				</div>
 			);
